@@ -23,6 +23,7 @@ private enum UserDefines
 	FLX_NO_FOCUS_LOST_SCREEN;
 	FLX_NO_DEBUG;
 	FLX_RECORD;
+	FLX_TROLL;
 	/* Defined in HaxeFlixel CI tests, do not use */
 	FLX_UNIT_TEST;
 	/* Defined in HaxeFlixel CI tests, do not use */
@@ -193,6 +194,7 @@ class FlxDefines
 		#else
 		define(FLX_NO_PITCH);
 		#end
+		define(FLX_TROLL);
 
 		if (!defined(FLX_NO_PITCH))
 			define(FLX_PITCH);
