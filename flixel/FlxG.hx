@@ -1,11 +1,5 @@
 package flixel;
 
-import openfl.Lib;
-import openfl.display.DisplayObject;
-import openfl.display.Stage;
-import openfl.display.StageDisplayState;
-import openfl.net.URLRequest;
-import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
@@ -28,6 +22,11 @@ import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxSave;
 import flixel.util.typeLimit.NextState;
+import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.display.StageDisplayState;
+import openfl.net.URLRequest;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end
@@ -66,8 +65,9 @@ class FlxG
 	public static var autoPause:Bool = true;
 
 	/**
-	 * WARNING: Changing this can lead to issues with physics and the recording system. Setting this to
-	 * `false` might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
+	 * WARNING: Changing this can lead to issues with physics and the recording system. Setting this to `false` might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
+	 * 
+	 * UPDATE: The new mainloop inside lime should no longer require this and so rn it does nothing.
 	 */
 	public static var fixedTimestep:Bool = true;
 
@@ -537,9 +537,13 @@ class FlxG
 	 */
 	public static inline function openURL(url:String, target = "_blank"):Void
 	{
-		// if the url does not already start with a protocol, add it.
-		if (!~/^.\w+?:\/*/.match(url))
-			url = "https://" + url;
+		// Ensure you can't open protocols such as steam://, file://, etc
+		var protocol:Array<String> = url.split("://");
+		if (protocol.length == 1)
+			url = 'https://${url}';
+		else if (protocol[0] != 'http' && protocol[0] != 'https')
+			throw "openURL can only open http and https links.";
+
 		Lib.getURL(new URLRequest(url), target);
 	}
 
@@ -604,30 +608,12 @@ class FlxG
 
 	static function initRenderMethod():Void
 	{
-		renderMethod = BLITTING;
-
-		#if (!lime_legacy && !flash)
-		#if (lime >= "7.0.0")
+		#if !flash
 		renderMethod = switch (stage.window.context.type)
 		{
 			case OPENGL, OPENGLES, WEBGL: DRAW_TILES;
 			default: BLITTING;
 		}
-		#else
-		if (!Lib.application.config.windows[0].hardware)
-		{
-			renderMethod = BLITTING;
-		}
-		else
-		{
-			renderMethod = switch (stage.window.renderer.type)
-			{
-				case OPENGL, CONSOLE: DRAW_TILES;
-				case CANVAS, FLASH, CAIRO: BLITTING;
-				default: BLITTING;
-			}
-		}
-		#end
 		#else
 		#if web
 		renderMethod = BLITTING;
@@ -676,7 +662,6 @@ class FlxG
 		sound.destroy(true);
 		#end
 		autoPause = true;
-		fixedTimestep = true;
 		timeScale = 1.0;
 		animationTimeScale = 1.0;
 		elapsed = 0;
@@ -719,12 +704,6 @@ class FlxG
 
 		updateFramerate = value;
 
-		game._stepMS = Math.abs(1000 / value);
-		game._stepSeconds = game._stepMS / 1000;
-
-		if (game._maxAccumulation < game._stepMS)
-			game._maxAccumulation = game._stepMS;
-
 		return value;
 	}
 
@@ -733,15 +712,10 @@ class FlxG
 		if (value > updateFramerate)
 			log.warn("FlxG.drawFramerate: the update framerate shouldn't be smaller than the draw framerate," + " since it can stop your game from updating.");
 
-		drawFramerate = Std.int(Math.abs(value));
+		drawFramerate = value;
 
 		if (game.stage != null)
 			game.stage.frameRate = drawFramerate;
-
-		game._maxAccumulation = 2000 / drawFramerate - 1;
-
-		if (game._maxAccumulation < game._stepMS)
-			game._maxAccumulation = game._stepMS;
 
 		return value;
 	}
