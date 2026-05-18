@@ -27,9 +27,7 @@ using flixel.util.FlxUnicodeUtil;
 #if flash
 import openfl.geom.Rectangle;
 #end
-#if (openfl >= "8.0.0")
 import openfl.utils.AssetType;
-#end
 
 // TODO: think about filters and text
 

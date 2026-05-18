@@ -11,9 +11,7 @@ import flixel.sound.FlxSoundGroup;
 import flixel.system.ui.FlxSoundTray;
 import openfl.Assets;
 import openfl.media.Sound;
-#if (openfl >= "8.0.0")
 import openfl.utils.AssetType;
-#end
 
 /**
  * Accessed via `FlxG.sound`.
