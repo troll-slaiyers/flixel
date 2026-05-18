@@ -26,13 +26,14 @@ class FlxState extends FlxGroup
 	public var persistentUpdate:Bool = false;
 
 	/**
-	 * Determines whether or not this state is updated even when it is not the active state.
-	 * For example, if you have your game state first, and then you push a menu state on top of it,
-	 * if this is set to `true`, the game state would continue to be drawn behind the pause state.
-	 * By default this is `true`, so background states will continue to be drawn behind the current state.
+	 * Determines whether the current state is drawn, even when it is not the active state.
+	 * For example, if you have your game state open first, and then you push a pause state on top of it,
+	 * if this is set to `true`, the game state would still continue to be drawn behind that pause state.
 	 *
-	 * If background states are not `visible` when you have a different state on top,
-	 * you should set this to `false` for improved performance.
+	 * By default, this is set to `true`, so the background states will continue to be "drawn" behind the current state.
+	 *
+	 * If you do not want background states to be `visible` when you have a different state on top,
+	 * then you should set this to `false` for improved performance.
 	 */
 	public var persistentDraw:Bool = true;
 
@@ -105,7 +106,7 @@ class FlxState extends FlxGroup
 	 */
 	public function create():Void {}
 
-	override public function draw():Void
+	override function draw():Void
 	{
 		if (persistentDraw || subState == null)
 			super.draw();
@@ -216,13 +217,21 @@ class FlxState extends FlxGroup
 	 * This method is called after the game loses focus.
 	 * Can be useful for third party libraries, such as tweening engines.
 	 */
-	public function onFocusLost():Void {}
+	public function onFocusLost():Void
+	{
+		if (subState != null)
+			subState.onFocusLost();
+	}
 
 	/**
 	 * This method is called after the game receives focus.
 	 * Can be useful for third party libraries, such as tweening engines.
 	 */
-	public function onFocus():Void {}
+	public function onFocus():Void
+	{
+		if (subState != null)
+			subState.onFocus();
+	}
 
 	/**
 	 * This function is called whenever the window size has been changed.
