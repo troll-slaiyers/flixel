@@ -410,15 +410,9 @@ class FlxGraphic implements IFlxDestroyable
 	 * Dumps bits of `BitmapData` to decrease memory usage, but you can't read/write pixels on it anymore
 	 * (but you can call `onContext()` (or `undump()`) method which will restore it again).
 	 */
+	@:deprecated("this doesn't do shit")
 	public function dump():Void
 	{
-		#if (lime_legacy && !flash)
-		if (FlxG.renderTile && canBeDumped)
-		{
-			bitmap.dumpBits();
-			isDumped = true;
-		}
-		#end
 	}
 
 	/**

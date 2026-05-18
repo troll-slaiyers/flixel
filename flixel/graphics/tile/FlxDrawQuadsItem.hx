@@ -11,7 +11,7 @@ import openfl.Vector;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
-	static inline var VERTICES_PER_QUAD = #if (openfl >= "8.5.0") 4 #else 6 #end;
+	static inline var VERTICES_PER_QUAD = 4;
 
 	public var shader:FlxShader;
 

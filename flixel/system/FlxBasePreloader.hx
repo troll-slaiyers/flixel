@@ -101,11 +101,6 @@ class FlxBasePreloader extends DefaultPreloader
 	{
 		super();
 
-		#if (openfl <= "4.0.0")
-		removeChild(progress);
-		removeChild(outline);
-		#end
-
 		minDisplayTime = MinDisplayTime;
 		if (AllowedURLs != null)
 			allowedURLs = AllowedURLs;
@@ -409,7 +404,6 @@ class FlxBasePreloader extends DefaultPreloader
 	#end
 }
 
-#if (openfl >= "8.0.0")
 // This is a slightly trimmed down version of the NMEPreloader present in older OpenFL versions
 private class DefaultPreloader extends Sprite
 {
@@ -463,6 +457,3 @@ private class DefaultPreloader extends Sprite
 		}
 	}
 }
-#else
-private typedef DefaultPreloader = NMEPreloader;
-#end

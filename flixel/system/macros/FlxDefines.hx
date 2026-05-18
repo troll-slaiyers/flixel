@@ -60,7 +60,6 @@ private enum HelperDefines
 	FLX_NATIVE_CURSOR;
 	FLX_SOUND_TRAY;
 	FLX_POINTER_INPUT;
-	FLX_POST_PROCESS;
 	FLX_JOYSTICK_API;
 	FLX_GAMEINPUT_API;
 	FLX_ACCELEROMETER;
@@ -188,12 +187,9 @@ class FlxDefines
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
 
-		#if (lime >= "8.0.0")
 		if (defined(FLX_NO_SOUND_SYSTEM) || defined("flash"))
 			define(FLX_NO_PITCH);
-		#else
-		define(FLX_NO_PITCH);
-		#end
+
 		define(FLX_TROLL);
 
 		if (!defined(FLX_NO_PITCH))
@@ -213,11 +209,6 @@ class FlxDefines
 
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
-
-		#if (openfl < "4.0.0")
-		if (defined("cpp") || defined("neko"))
-			define(FLX_POST_PROCESS);
-		#end
 
 		if (defined("cpp") && defined("steamwrap"))
 			define(FLX_STEAMWRAP);
