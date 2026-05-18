@@ -671,7 +671,7 @@ class FlxGame extends Sprite
 	 */
 	function update():Void
 	{
-		if (!_state.active || !_state.exists)
+		if (_state == null || !_state.active || !_state.exists)
 			return;
 
 		if (_nextState != null)
@@ -790,7 +790,7 @@ class FlxGame extends Sprite
 	 */
 	function draw():Void
 	{
-		if (!_state.visible || !_state.exists)
+		if (_state == null || !_state.visible || !_state.exists)
 			return;
 
 		#if FLX_DEBUG
