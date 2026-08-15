@@ -458,10 +458,7 @@ private class FlxSharedObject extends SharedObject
 			{
 				try
 				{
-					final unserializer = new haxe.Unserializer(encodedData);
-					final resolver = { resolveEnum: Type.resolveEnum, resolveClass: SharedObject.__resolveClass };
-					unserializer.setResolver(cast resolver);
-					sharedObject.data = unserializer.unserialize();
+					sharedObject.data = new haxe.Unserializer(encodedData).unserialize();
 				}
 				catch (e:Dynamic) {}
 			}
