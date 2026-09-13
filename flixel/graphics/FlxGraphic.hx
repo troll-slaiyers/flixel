@@ -320,10 +320,12 @@ class FlxGraphic implements IFlxDestroyable
 	public var isDestroyed(get, never):Bool;
 
 	/**
-	 * Whether the `BitmapData` of this graphic object can be dumped for decreased memory usage,
-	 * but may cause some issues (when you need direct access to pixels of this graphic.
-	 * If the graphic is dumped then you should call `undump()` and have total access to pixels.
+	 * Whether the `BitmapData` of this graphic object can be refreshed.
+	 * This is only the case for graphics with an `assetsKey` or `assetsClass`.
 	 */
+	public var canBeRefreshed(get, never):Bool;
+	
+	@:deprecated("`canBeDumped` is deprecated, use `canBeRefreshed`")
 	public var canBeDumped(get, never):Bool;
 
 	/**
@@ -406,53 +408,36 @@ class FlxGraphic implements IFlxDestroyable
 		shader = new FlxShader();
 	}
 
-	/**
-	 * Dumps bits of `BitmapData` to decrease memory usage, but you can't read/write pixels on it anymore
-	 * (but you can call `onContext()` (or `undump()`) method which will restore it again).
-	 */
-	@:deprecated("this doesn't do shit")
-	public function dump():Void
-	{
-	}
+	@:deprecated("This function has no effect and doesn't exist on future flixel versions")
+	@:noCompletion
+	public function dump():Void {}
 
 	/**
-	 * Undumps bits of the `BitmapData` - regenerates it and regenerate tilesheet data for this object
+	 * Refreshes the `BitmapData` of this graphic.
 	 */
-	public function undump():Void
+	public function refresh():Void
 	{
 		var newBitmap:BitmapData = getBitmapFromSystem();
 		if (newBitmap != null)
 			bitmap = newBitmap;
-		isDumped = false;
 	}
-
-	/**
-	 * Use this method to restore cached `BitmapData` (if it's possible).
-	 * It's called automatically when the RESIZE event occurs.
-	 */
-	public function onContext():Void
+	
+	@:deprecated("`undump` is deprecated, use `refresh`")
+	public function undump():Void
 	{
-		// no need to restore tilesheet if it hasn't been dumped
-		if (isDumped)
-		{
-			undump(); // restore everything
-			dump(); // and dump BitmapData again
-		}
+		refresh();
 	}
 
 	/**
 	 * Asset reload callback for this graphic object.
-	 * It regenerated its tilesheet and resets frame bitmaps.
+	 * It regenerates its bitmap data.
 	 */
 	public function onAssetsReload():Void
 	{
-		if (!canBeDumped)
+		if (!canBeRefreshed)
 			return;
-
-		var dumped:Bool = isDumped;
-		undump();
-		if (dumped)
-			dump();
+			
+		refresh();
 	}
 
 	/**
@@ -558,11 +543,16 @@ class FlxGraphic implements IFlxDestroyable
 		return shader == null;
 	}
 
-	inline function get_canBeDumped():Bool
+	inline function get_canBeRefreshed():Bool
 	{
 		return assetsClass != null || assetsKey != null;
 	}
 	
+	inline function get_canBeDumped():Bool
+	{
+		return canBeRefreshed;
+	}
+
 	public function incrementUseCount()
 	{
 		useCount++;

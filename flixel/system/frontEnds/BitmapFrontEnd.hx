@@ -61,57 +61,6 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * New context handler.
-	 * Regenerates tilesheets for all dumped graphics objects in the cache.
-	 */
-	public function onContext():Void
-	{
-		for (key in _cache.keys())
-		{
-			var obj = _cache.get(key);
-			if (obj != null && obj.isDumped)
-			{
-				obj.onContext();
-			}
-		}
-	}
-
-	/**
-	 * Dumps bits of all graphics in the cache. This frees some memory, but you can't read/write pixels on those graphics anymore.
-	 * You can call undump() method for each FlxGraphic (or undumpCache()) object which will restore it again.
-	 */
-	public function dumpCache():Void
-	{
-		#if !web
-		for (key in _cache.keys())
-		{
-			var obj = _cache.get(key);
-			if (obj != null && obj.canBeDumped)
-			{
-				obj.dump();
-			}
-		}
-		#end
-	}
-
-	/**
-	 * Restores graphics of all dumped objects in the cache.
-	 */
-	public function undumpCache():Void
-	{
-		#if !web
-		for (key in _cache.keys())
-		{
-			var obj = _cache.get(key);
-			if (obj != null && obj.isDumped)
-			{
-				obj.undump();
-			}
-		}
-		#end
-	}
-
-	/**
 	 * Check the local bitmap cache to see if a bitmap with this key has been loaded already.
 	 *
 	 * @param   key  The key identifying the bitmap.
