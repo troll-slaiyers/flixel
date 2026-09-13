@@ -77,6 +77,8 @@ private enum HelperDefines
 	/* Used in HaxeFlixel CI, should have no effect on personal projects */
 	FLX_NO_CI;
 	FLX_SAVE;
+
+	FLX_OPENGL_AVAILABLE;
 }
 
 class FlxDefines
@@ -220,6 +222,12 @@ class FlxDefines
 		// should always be defined as of 5.5.1 and, therefore, deprecated
 		define(FLX_DRAW_QUADS);
 		// #end
+
+		#if (lime_opengl || lime_opengles || lime_webgl)
+		// FlxG.stage.window.context.attributes.hardware is not always defined during unit tests
+		if (defined(FLX_NO_UNIT_TEST))
+			define(FLX_OPENGL_AVAILABLE);
+		#end
 	}
 
 	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
