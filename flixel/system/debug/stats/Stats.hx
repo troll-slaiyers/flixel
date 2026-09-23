@@ -1,5 +1,6 @@
 package flixel.system.debug.stats;
 
+import lime.utils.Float32Array;
 import openfl.display.BitmapData;
 import openfl.system.System;
 import openfl.text.TextField;
@@ -226,9 +227,9 @@ class Stats extends Window
 		{
 			return;
 		}
-		var time:Int = _currentTime = FlxG.game.ticks;
+		var time:Float = _currentTime = FlxG.game.ticks;
 
-		var elapsed:Int = time - _lastTime;
+		var elapsed:Float = time - _lastTime;
 
 		if (elapsed > UPDATE_DELAY)
 		{
@@ -341,7 +342,7 @@ class Stats extends Window
 	 *
 	 * @param 	Time	How long this update took.
 	 */
-	public function flixelUpdate(Time:Int):Void
+	public function flixelUpdate(Time:Float):Void
 	{
 		if (_paused)
 			return;
